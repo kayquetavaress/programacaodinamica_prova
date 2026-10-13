@@ -1,0 +1,23 @@
+/* CSS global: cores, fonte e a faixa centralizada. */
+:root {
+  --primaria: #0b5ea8;
+  --fundo: #f5f7fa;
+  --superficie: #ffffff;
+  --texto: #1d2733;
+  --texto-suave: #5b6878;
+  --borda: #d6dde6;
+  --erro: #c62828;
+  --sucesso: #2e7d32;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  background: var(--fundo);
+  color: var(--texto);
+  line-height: 1.5;
+}
+
+.faixa { max-width: 860px; margin: 0 auto; padding-left: 1rem; padding-right: 1rem; }

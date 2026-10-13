@@ -1,0 +1,68 @@
+/* As cores vêm das variáveis do styles.css; o segundo valor é o reserva,
+   caso o seu projeto use outros nomes de variável. */
+.pessoa {
+  --c-primaria: var(--primaria, #123a73);
+  --c-destaque: var(--destaque, #f0b429);
+  --c-superficie: var(--superficie, #ffffff);
+  --c-fundo: var(--fundo, #f5f6fa);
+  --c-texto: var(--texto, #1d2733);
+  --c-suave: var(--texto-suave, #5b6878);
+  --c-borda: var(--borda, #d6dde6);
+  --c-erro: var(--erro, #c62828);
+  --c-sucesso: var(--sucesso, #2e7d32);
+  color: var(--c-texto);
+}
+
+.sub { color: var(--c-suave); margin-top: -0.5rem; }
+
+form {
+  background: var(--c-superficie);
+  border: 1px solid var(--c-borda);
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: grid;
+  gap: 1.25rem;
+}
+
+fieldset { border: none; margin: 0; padding: 0; display: grid; gap: 1rem; min-width: 0; }
+legend {
+  font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--c-primaria); padding-bottom: 0.4rem; margin-bottom: 0.25rem;
+  border-bottom: 2px solid var(--c-destaque); width: 100%;
+}
+
+.linha { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.linha.tres { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+@media (max-width: 600px) { .linha { grid-template-columns: 1fr; } }
+
+.campo { display: flex; flex-direction: column; gap: 0.3rem; min-width: 0; }
+label { font-weight: 600; font-size: 0.9rem; }
+
+input, select {
+  font: inherit; width: 100%; box-sizing: border-box;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--c-borda); border-radius: 8px;
+  background: var(--c-fundo); color: var(--c-texto);
+}
+input:focus, select:focus { outline: 2px solid var(--c-primaria); outline-offset: 1px; }
+input::placeholder { color: var(--c-suave); opacity: 0.7; }
+
+.invalido input, .invalido select { border-color: var(--c-erro); }
+.erro { color: var(--c-erro); font-size: 0.82rem; }
+
+.acoes { display: flex; gap: 0.75rem; }
+button {
+  font: inherit; font-weight: 600; cursor: pointer;
+  padding: 0.6rem 1.3rem; border-radius: 8px;
+  border: 1px solid var(--c-primaria); background: var(--c-primaria); color: #fff;
+}
+button.secundario { background: transparent; color: var(--c-primaria); }
+button.link { border: none; background: none; padding: 0; color: var(--c-erro); font-weight: 400; text-decoration: underline; }
+
+.sucesso { color: var(--c-sucesso); font-weight: 600; margin: 0; }
+.vazio { color: var(--c-suave); }
+
+.tabela { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+th, td { text-align: left; padding: 0.5rem; border-bottom: 1px solid var(--c-borda); white-space: nowrap; }
+th { color: var(--c-suave); font-weight: 600; }

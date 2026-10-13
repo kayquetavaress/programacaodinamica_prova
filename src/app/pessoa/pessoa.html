@@ -1,0 +1,134 @@
+<!--
+  4º ARQUIVO — a TELA. Todo campo: RÓTULO → CONTROLE → MENSAGEM.
+-->
+<section class="pessoa">
+  <h1>Cadastro de pessoa</h1>
+  <p class="sub">Campos com * são obrigatórios.</p>
+
+  <form (ngSubmit)="salvar()" novalidate>
+    <!-- ===================== Identificação ===================== -->
+    <fieldset>
+      <legend>Identificação</legend>
+
+      <div class="campo" [class.invalido]="erro('nomeCompleto')">
+        <label for="nomeCompleto">Nome completo *</label>
+        <input id="nomeCompleto" name="nomeCompleto" type="text" autocomplete="name"
+               [(ngModel)]="form.nomeCompleto" (blur)="tocar('nomeCompleto')" />
+        @if (erro('nomeCompleto'); as msg) { <small class="erro">{{ msg }}</small> }
+      </div>
+
+      <div class="linha tres">
+        <div class="campo" [class.invalido]="erro('dataNascimento')">
+          <label for="dataNascimento">Data de nascimento *</label>
+          <input id="dataNascimento" name="dataNascimento" type="date" [max]="hoje"
+                 [(ngModel)]="form.dataNascimento" (blur)="tocar('dataNascimento')" />
+          @if (erro('dataNascimento'); as msg) { <small class="erro">{{ msg }}</small> }
+        </div>
+
+        <!-- CPF: máscara aplicada a cada tecla, por isso [value] + (input) em vez de ngModel -->
+        <div class="campo" [class.invalido]="erro('cpf')">
+          <label for="cpf">CPF *</label>
+          <input id="cpf" name="cpf" type="text" inputmode="numeric" placeholder="000.000.000-00"
+                 [value]="form.cpf" (input)="digitarCpf($event)" (blur)="tocar('cpf')" />
+          @if (erro('cpf'); as msg) { <small class="erro">{{ msg }}</small> }
+        </div>
+
+        <div class="campo" [class.invalido]="erro('rg')">
+          <label for="rg">RG *</label>
+          <input id="rg" name="rg" type="text" maxlength="20"
+                 [(ngModel)]="form.rg" (blur)="tocar('rg')" />
+          @if (erro('rg'); as msg) { <small class="erro">{{ msg }}</small> }
+        </div>
+      </div>
+    </fieldset>
+
+    <!-- ===================== Filiação ===================== -->
+    <fieldset>
+      <legend>Filiação</legend>
+      <div class="linha">
+        <div class="campo" [class.invalido]="erro('nomeMae')">
+          <label for="nomeMae">Nome da mãe *</label>
+          <input id="nomeMae" name="nomeMae" type="text"
+                 [(ngModel)]="form.nomeMae" (blur)="tocar('nomeMae')" />
+          @if (erro('nomeMae'); as msg) { <small class="erro">{{ msg }}</small> }
+        </div>
+
+        <div class="campo" [class.invalido]="erro('nomePai')">
+          <label for="nomePai">Nome do pai</label>
+          <input id="nomePai" name="nomePai" type="text" placeholder="opcional"
+                 [(ngModel)]="form.nomePai" (blur)="tocar('nomePai')" />
+          @if (erro('nomePai'); as msg) { <small class="erro">{{ msg }}</small> }
+        </div>
+      </div>
+    </fieldset>
+
+    <!-- ===================== Naturalidade ===================== -->
+    <fieldset>
+      <legend>Naturalidade</legend>
+      <div class="linha tres">
+        <div class="campo" [class.invalido]="erro('paisOrigem')">
+          <label for="paisOrigem">País de origem *</label>
+          <select id="paisOrigem" name="paisOrigem"
+                  [(ngModel)]="form.paisOrigem" (ngModelChange)="mudarPais()"
+                  (blur)="tocar('paisOrigem')">
+            <option value="">— escolha —</option>
+            @for (p of paises; track p) { <option [value]="p">{{ p }}</option> }
+          </select>
+          @if (erro('paisOrigem'); as msg) { <small class="erro">{{ msg }}</small> }
+        </div>
+
+        <!-- REGRA CRUZADA: UF só aparece para quem nasceu no Brasil -->
+        @if (nascidoNoBrasil) {
+          <div class="campo" [class.invalido]="erro('ufOrigem')">
+            <label for="ufOrigem">UF *</label>
+            <select id="ufOrigem" name="ufOrigem"
+                    [(ngModel)]="form.ufOrigem" (blur)="tocar('ufOrigem')">
+              <option value="">—</option>
+              @for (uf of ufs; track uf) { <option [value]="uf">{{ uf }}</option> }
+            </select>
+            @if (erro('ufOrigem'); as msg) { <small class="erro">{{ msg }}</small> }
+          </div>
+        }
+
+        <div class="campo" [class.invalido]="erro('cidadeOrigem')">
+          <label for="cidadeOrigem">Cidade de origem *</label>
+          <input id="cidadeOrigem" name="cidadeOrigem" type="text"
+                 [(ngModel)]="form.cidadeOrigem" (blur)="tocar('cidadeOrigem')" />
+          @if (erro('cidadeOrigem'); as msg) { <small class="erro">{{ msg }}</small> }
+        </div>
+      </div>
+    </fieldset>
+
+    <div class="acoes">
+      <button type="submit">Cadastrar</button>
+      <button type="button" class="secundario" (click)="limpar()">Limpar</button>
+    </div>
+
+    @if (mensagemSucesso) { <p class="sucesso">{{ mensagemSucesso }}</p> }
+  </form>
+
+  <!-- ===================== Lista ===================== -->
+  <h2>Pessoas cadastradas ({{ pessoas.length }})</h2>
+  @if (pessoas.length === 0) {
+    <p class="vazio">Ninguém cadastrado ainda.</p>
+  } @else {
+    <div class="tabela">
+      <table>
+        <thead>
+          <tr><th>Nome</th><th>Nascimento</th><th>CPF</th><th>Origem</th><th></th></tr>
+        </thead>
+        <tbody>
+          @for (p of pessoas; track p.id) {
+            <tr>
+              <td>{{ p.nomeCompleto }}</td>
+              <td>{{ dataBr(p.dataNascimento) }}</td>
+              <td>{{ p.cpf }}</td>
+              <td>{{ origem(p) }}</td>
+              <td><button type="button" class="link" (click)="remover(p.id)">remover</button></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>

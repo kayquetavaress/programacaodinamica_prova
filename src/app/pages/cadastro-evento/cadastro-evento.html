@@ -1,0 +1,171 @@
+<h1>Novo Evento</h1>
+
+<label for="titulo">
+  Título do evento
+</label>
+
+<input
+  id="titulo"
+  name="titulo"
+  type="text"
+  [(ngModel)]="form.titulo"
+  (blur)="tocar('titulo')"
+  [class.invalido]="erro('titulo')" />
+
+@if (erro('titulo')) {
+
+  <p class="erro">
+    {{ erro('titulo') }}
+  </p>
+
+}
+
+<br>
+
+<label for="data">
+  Data
+</label>
+
+<input
+  id="data"
+  name="data"
+  type="date"
+  [(ngModel)]="form.data"
+  (blur)="tocar('data')"
+  [class.invalido]="erro('data')" />
+
+@if (erro('data')) {
+
+  <p class="erro">
+    {{ erro('data') }}
+  </p>
+
+}
+
+<br>
+
+<label for="local">
+  Local
+</label>
+
+<select
+  id="local"
+  name="local"
+  [(ngModel)]="form.local"
+  (blur)="tocar('local')"
+  [class.invalido]="erro('local')">
+
+  <option value="">
+    Selecione
+  </option>
+
+  <option>Auditório</option>
+  <option>Laboratório 1</option>
+  <option>Laboratório 2</option>
+  <option>Sala 101</option>
+
+</select>
+
+@if (erro('local')) {
+
+  <p class="erro">
+    {{ erro('local') }}
+  </p>
+
+}
+
+<br>
+
+<label for="emailResponsavel">
+  E-mail do responsável
+</label>
+
+<input
+  id="emailResponsavel"
+  name="emailResponsavel"
+  type="email"
+  [(ngModel)]="form.emailResponsavel"
+  (blur)="tocar('emailResponsavel')"
+  [class.invalido]="erro('emailResponsavel')" />
+
+@if (erro('emailResponsavel')) {
+
+  <p class="erro">
+    {{ erro('emailResponsavel') }}
+  </p>
+
+}
+
+<br>
+
+<label for="vagas">
+  Vagas
+</label>
+
+<input
+  id="vagas"
+  name="vagas"
+  type="number"
+  [(ngModel)]="form.vagas"
+  (blur)="tocar('vagas')"
+  [class.invalido]="erro('vagas')" />
+
+@if (erro('vagas')) {
+
+  <p class="erro">
+    {{ erro('vagas') }}
+  </p>
+
+}
+
+<br><br>
+
+<button
+  (click)="salvar()"
+  [disabled]="!valido">
+
+  Salvar
+
+</button>
+
+<hr>
+
+<h2>Eventos cadastrados</h2>
+
+@for (evento of eventos; track evento.id) {
+
+  <div>
+
+    <strong>
+      {{ evento.titulo }}
+    </strong>
+
+    <br>
+
+    {{ evento.data }}
+
+    <br>
+
+    {{ evento.local }}
+
+    <br>
+
+    {{ evento.emailResponsavel }}
+
+    <br>
+
+    {{ evento.vagas }} vagas
+
+    <hr>
+
+  </div>
+
+}
+
+@empty {
+
+  <p>
+    Nenhum evento cadastrado.
+  </p>
+
+}

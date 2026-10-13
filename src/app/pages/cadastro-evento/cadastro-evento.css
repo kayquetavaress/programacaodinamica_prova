@@ -1,0 +1,29 @@
+input,
+select {
+  display: block;
+  width: 320px;
+  padding: 8px;
+  margin-top: 5px;
+}
+
+button {
+  padding: 10px 15px;
+  border: none;
+  background: #0d6efd;
+  color: white;
+  cursor: pointer;
+}
+
+button:disabled {
+  background: gray;
+  cursor: not-allowed;
+}
+
+.invalido {
+  border: 2px solid red;
+}
+
+.erro {
+  color: red;
+  margin: 5px 0;
+}

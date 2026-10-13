@@ -1,0 +1,162 @@
+<!--
+  4º ARQUIVO — a TELA.
+  Todo campo segue o mesmo trio:  RÓTULO  →  CONTROLE  →  MENSAGEM
+    - [(ngModel)]  liga o controle ao form
+    - (blur)       marca o campo como tocado
+    - erro('x')    só devolve texto depois do blur, e enquanto o valor for inválido
+-->
+<section class="padrao">
+  <h1>Agenda Unijorge</h1>
+  <p class="sub">Formulário de referência: campos, validações e regras cruzadas.</p>
+
+  <form (ngSubmit)="salvar()" novalidate>
+    <!-- TEXTO -->
+    <div class="campo" [class.invalido]="erro('nome')">
+      <label for="nome">Nome completo *</label>
+      <input id="nome" name="nome" type="text" autocomplete="name"
+             [(ngModel)]="form.nome" (blur)="tocar('nome')" />
+      @if (erro('nome'); as msg) { <small class="erro">{{ msg }}</small> }
+    </div>
+
+    <div class="linha">
+      <!-- DATA -->
+      <div class="campo" [class.invalido]="erro('nascimento')">
+        <label for="nascimento">Nascimento *</label>
+        <input id="nascimento" name="nascimento" type="date"
+               [(ngModel)]="form.nascimento" (blur)="tocar('nascimento')" />
+        @if (erro('nascimento'); as msg) { <small class="erro">{{ msg }}</small> }
+      </div>
+
+      <!-- SELECT -->
+      <div class="campo" [class.invalido]="erro('curso')">
+        <label for="curso">Curso *</label>
+        <select id="curso" name="curso" [(ngModel)]="form.curso" (blur)="tocar('curso')">
+          <option value="">— escolha —</option>
+          @for (c of cursos; track c) { <option [value]="c">{{ c }}</option> }
+        </select>
+        @if (erro('curso'); as msg) { <small class="erro">{{ msg }}</small> }
+      </div>
+    </div>
+
+    <!-- RADIO -->
+    <fieldset class="campo">
+      <legend>Perfil *</legend>
+      <label class="opcao">
+        <input type="radio" name="perfil" value="aluno"
+               [(ngModel)]="form.perfil" (ngModelChange)="mudarPerfil()" /> Aluno
+      </label>
+      <label class="opcao">
+        <input type="radio" name="perfil" value="professor"
+               [(ngModel)]="form.perfil" (ngModelChange)="mudarPerfil()" /> Professor
+      </label>
+    </fieldset>
+
+    <!-- REGRA CRUZADA: matrícula e semestre só existem para aluno -->
+    @if (ehAluno) {
+      <div class="linha">
+        <div class="campo" [class.invalido]="erro('matricula')">
+          <label for="matricula">Matrícula *</label>
+          <input id="matricula" name="matricula" type="text" inputmode="numeric" maxlength="8"
+                 placeholder="8 dígitos"
+                 [(ngModel)]="form.matricula" (blur)="tocar('matricula')" />
+          @if (erro('matricula'); as msg) { <small class="erro">{{ msg }}</small> }
+        </div>
+
+        <!-- NÚMERO -->
+        <div class="campo" [class.invalido]="erro('semestre')">
+          <label for="semestre">Semestre *</label>
+          <input id="semestre" name="semestre" type="number" min="1" max="10"
+                 [(ngModel)]="form.semestre" (blur)="tocar('semestre')" />
+          @if (erro('semestre'); as msg) { <small class="erro">{{ msg }}</small> }
+        </div>
+      </div>
+    }
+
+    <div class="linha">
+      <!-- E-MAIL -->
+      <div class="campo" [class.invalido]="erro('email')">
+        <label for="email">E-mail *</label>
+        <input id="email" name="email" type="email" autocomplete="email"
+               [(ngModel)]="form.email" (blur)="tocar('email')" />
+        @if (erro('email'); as msg) { <small class="erro">{{ msg }}</small> }
+      </div>
+
+      <!-- TELEFONE (obrigatório só para professor) -->
+      <div class="campo" [class.invalido]="erro('telefone')">
+        <label for="telefone">Telefone @if (!ehAluno) { * }</label>
+        <input id="telefone" name="telefone" type="tel" autocomplete="tel"
+               placeholder="(71) 99999-8888"
+               [(ngModel)]="form.telefone" (blur)="tocar('telefone')" />
+        @if (erro('telefone'); as msg) { <small class="erro">{{ msg }}</small> }
+      </div>
+    </div>
+
+    <div class="linha">
+      <!-- SENHA -->
+      <div class="campo" [class.invalido]="erro('senha')">
+        <label for="senha">Senha *</label>
+        <input id="senha" name="senha" type="password" autocomplete="new-password"
+               [(ngModel)]="form.senha" (blur)="tocar('senha')" />
+        @if (erro('senha'); as msg) { <small class="erro">{{ msg }}</small> }
+      </div>
+
+      <!-- CONFIRMAÇÃO (regra cruzada com a senha) -->
+      <div class="campo" [class.invalido]="erro('confirmacao')">
+        <label for="confirmacao">Confirme a senha *</label>
+        <input id="confirmacao" name="confirmacao" type="password" autocomplete="new-password"
+               [(ngModel)]="form.confirmacao" (blur)="tocar('confirmacao')" />
+        @if (erro('confirmacao'); as msg) { <small class="erro">{{ msg }}</small> }
+      </div>
+    </div>
+
+    <!-- TEXTAREA COM CONTADOR -->
+    <div class="campo" [class.invalido]="erro('observacoes')">
+      <label for="observacoes">Observações</label>
+      <textarea id="observacoes" name="observacoes" rows="3"
+                [(ngModel)]="form.observacoes" (blur)="tocar('observacoes')"></textarea>
+      <small class="contador" [class.estourou]="form.observacoes.length > limiteObservacoes">
+        {{ form.observacoes.length }} / {{ limiteObservacoes }}
+      </small>
+      @if (erro('observacoes'); as msg) { <small class="erro">{{ msg }}</small> }
+    </div>
+
+    <!-- CHECKBOX -->
+    <div class="campo" [class.invalido]="erro('aceite')">
+      <label class="opcao">
+        <input type="checkbox" name="aceite"
+               [(ngModel)]="form.aceite" (blur)="tocar('aceite')" />
+        Li e aceito os termos de uso *
+      </label>
+      @if (erro('aceite'); as msg) { <small class="erro">{{ msg }}</small> }
+    </div>
+
+    <div class="acoes">
+      <button type="submit">Salvar</button>
+      <button type="button" class="secundario" (click)="limpar()">Limpar</button>
+    </div>
+
+    @if (mensagemSucesso) { <p class="sucesso">{{ mensagemSucesso }}</p> }
+  </form>
+
+  <h2>Contatos na agenda ({{ contatos.length }})</h2>
+  @if (contatos.length === 0) {
+    <p class="vazio">Nenhum contato ainda. Preencha o formulário acima.</p>
+  } @else {
+    <table>
+      <thead>
+        <tr><th>Nome</th><th>Perfil</th><th>E-mail</th><th>Curso</th><th></th></tr>
+      </thead>
+      <tbody>
+        @for (c of contatos; track c.id) {
+          <tr>
+            <td>{{ c.nome }}</td>
+            <td>{{ c.perfil === 'aluno' ? 'Aluno · ' + c.semestre + 'º sem.' : 'Professor' }}</td>
+            <td>{{ c.email }}</td>
+            <td>{{ c.curso }}</td>
+            <td><button type="button" class="link" (click)="remover(c.id)">remover</button></td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</section>

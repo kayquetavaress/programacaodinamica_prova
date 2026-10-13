@@ -1,0 +1,7 @@
+header { background: var(--primaria); }
+nav { display: flex; align-items: center; gap: 1.25rem; padding-top: .9rem; padding-bottom: .9rem; flex-wrap: wrap; }
+.marca { font-weight: 700; color: #fff; margin-right: auto; }
+nav a { color: rgba(255,255,255,.8); text-decoration: none; font-weight: 500; padding-bottom: 2px; border-bottom: 2px solid transparent; }
+nav a:hover { color: #fff; }
+nav a.ativo { color: #fff; border-bottom-color: #fff; }
+main { padding-top: 1.5rem; padding-bottom: 3rem; }
